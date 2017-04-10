@@ -13,3 +13,4 @@ Solar Tracking and Autonomous Bus microcontroller code files. The project will a
 
 - Added "main.c" to repository.
 - "main.c" contains functions for one-way serial communication and basic stepper motor control (one directional movement only).
+- Made header files for each major component of the satellite. Headers files contain the functions for components such as stepper motors, UARTs and ADC's.
