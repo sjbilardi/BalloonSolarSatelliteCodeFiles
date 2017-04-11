@@ -1,5 +1,5 @@
-# STAB
-Solar Tracking and Autonomous Bus microcontroller code files. The project will allow a mock satellite to:
+# Solar Tracking and Autonomous Bus Microcontroller Code Files
+The project will allow a mock satellite to:
 
 - track a light source in one dimension using a stepper motor and LED's.
 - measure the temperature using two seperate thermistors.
