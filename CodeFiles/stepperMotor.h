@@ -15,6 +15,7 @@ typedef struct {
 	int halfStepsSize;
 	
 	int mode;
+	int clock;
 	
 	int pins;
 	} Motor;
@@ -29,6 +30,7 @@ Motor motor_init(int pins)
 					4, // fullStepsSize
 					8, // halfStepsSize
 					FULLSTEPMODE, // mode (default = fullStepMode)
+					1, // enable clockwise movement
 					pins}; // PORTB pins 0-3
 	DDRB |= pins; // set register B pins to high; configured as high
 	return motor;
@@ -56,11 +58,24 @@ void moveMotor(Motor *motor)
 			break;
 	}
 	
-	for(i=0; i<numbStep; i++)
+	if(motor->clock)
 	{
-		PORTB &= 0xF0; // Turn off the stepper motor only
-		_delay_ms(50); // Delay the time between turning off and on the motor
-		PORTB |= *(steps + i); // Cause the stepper motor to make a step
-		_delay_ms(50); // Delay the time between the step and shutting off the motor
+		for(i=0; i<numbStep; i++)
+		{
+			PORTB &= 0xF0; // Turn off the stepper motor only
+			_delay_ms(50); // Delay the time between turning off and on the motor
+			PORTB |= *(steps + i); // Cause the stepper motor to make a step
+			_delay_ms(50); // Delay the time between the step and shutting off the motor
+		}
+	}
+	else
+	{
+		for(i=numbStep-1; i>=0; i--)
+		{
+			PORTB &= 0xF0; // Turn off the stepper motor only
+			_delay_ms(50); // Delay the time between turning off and on the motor
+			PORTB |= *(steps + i); // Cause the stepper motor to make a step
+			_delay_ms(50); // Delay the time between the step and shutting off the motor
+		}
 	}
 }
