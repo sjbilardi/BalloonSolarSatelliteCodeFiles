@@ -24,3 +24,5 @@ void write_uart(unsigned char c[]) // transmit data over USART
 		c++; // Increment the pointer to point to the next character
 	}while(*c != '\0');
 }
+
+

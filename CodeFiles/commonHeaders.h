@@ -3,3 +3,5 @@
 #include <math.h>
 #define F_CPU 1000000UL
 #include <util/delay.h>
+
+#define DEBUG 0
