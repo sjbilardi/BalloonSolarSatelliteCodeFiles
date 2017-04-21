@@ -11,7 +11,7 @@ typedef struct {
 	int halfStepsSize;
 	
 	int mode;
-	int clock;
+	int direction;
 	
 	int pins;
 	} Motor;
@@ -54,7 +54,7 @@ void moveMotor(Motor *motor)
 			break;
 	}
 	
-	if(motor->clock)
+	if(motor->direction == GOCLOCKWISE)
 	{
 		for(i=0; i<numbStep; i++)
 		{
@@ -64,7 +64,7 @@ void moveMotor(Motor *motor)
 			_delay_ms(50); // Delay the time between the step and shutting off the motor
 		}
 	}
-	else
+	else if(motor->direction == GOCOUNTERCLOCKWISE)
 	{
 		for(i=numbStep-1; i>=0; i--)
 		{
@@ -73,5 +73,9 @@ void moveMotor(Motor *motor)
 			PORTB |= *(steps + i); // Cause the stepper motor to make a step
 			_delay_ms(50); // Delay the time between the step and shutting off the motor
 		}
+	}
+	else
+	{
+		// Idle
 	}
 }
