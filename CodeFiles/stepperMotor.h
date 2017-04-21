@@ -6,12 +6,12 @@ typedef struct {
 	int fullSteps[4];
 	int halfSteps[8];
 	
-	int waveStepsSize;
-	int fullStepsSize;
-	int halfStepsSize;
+	char waveStepsSize;
+	char fullStepsSize;
+	char halfStepsSize;
 	
-	int mode;
-	int direction;
+	char mode;
+	char direction;
 	
 	int pins;
 	} Motor;
@@ -36,7 +36,7 @@ void moveMotor(Motor *motor)
 {
 	int i = 0;
 	int *steps; 
-	int numbStep;
+	char numbStep;
 	
 	switch(motor->mode)
 	{
