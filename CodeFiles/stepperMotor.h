@@ -17,7 +17,7 @@ typedef struct {
 	} Motor;
 
 /* Motor Functions */
-Motor motor_init(int pins)
+Motor motor_init(char pins)
 {
 	Motor motor = {	{0x08, 0x02, 0x04, 0x01},							// waveSteps
 					{0x0A, 0x06, 0x05, 0x09},							// fullSteps
