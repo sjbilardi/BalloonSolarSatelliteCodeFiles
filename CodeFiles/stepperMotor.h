@@ -13,7 +13,7 @@ typedef struct {
 	char mode;
 	char direction;
 	
-	int pins;
+	char pins;
 	} Motor;
 
 /* Motor Functions */
