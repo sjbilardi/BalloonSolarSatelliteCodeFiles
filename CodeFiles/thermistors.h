@@ -17,11 +17,11 @@ typedef struct {
 	double Vo;
 	double temp;
 	
-	int pin;
+	char pin;
 } Thermistor;
 
 /* Motor Functions */
-Thermistor therm1_init(int pin)
+Thermistor therm1_init(char pin)
 {
 	Thermistor therm1 = {	1,
 							9.88,		// k-ohm
@@ -37,7 +37,7 @@ Thermistor therm1_init(int pin)
 return therm1;
 }
 
-Thermistor therm2_init(int pin)
+Thermistor therm2_init(char pin)
 {
 	Thermistor therm2 = {	2,
 							9.83,		// k-ohm
