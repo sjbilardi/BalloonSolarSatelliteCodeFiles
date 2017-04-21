@@ -3,6 +3,7 @@
 #include "adcComm.h"
 #include "thermistors.h"
 #include "stepperMotor.h"
+#include "LEDComm.h"
 #include "allInterrupts.h"
 
 int main()
