@@ -9,6 +9,11 @@
 #define IDLE            1
 #define GOCLOCKWISE     2
 
+/* Motor step options */
+#define WAVESTEPMODE 0 // waveStepMode
+#define FULLSTEPMODE 1 // fullStepMode
+#define HALFSTEPMODE 2 // halfStepMode
+
 /* Comment codes */
 #define MOVINGCLOCK         0 // sun detected on right led; moving clockwise
 #define MOVINGCOUNTERCLOCK  1 // sun detected on left  led; moving counterclowise
