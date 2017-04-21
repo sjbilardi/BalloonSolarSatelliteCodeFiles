@@ -45,25 +45,28 @@ int main()
 		/* Move counter clockwise if left LED reads brighter light */
 		if(leds.direction == GOCOUNTERCLOCKWISE)
 		{
-			motor.clock = 0; // move counter clockwise
-			moveMotor(&motor); // run through one cycle
+			motor.direction = GOCOUNTERCLOCKWISE; // move counter clockwise
 			sprintf(buffer + strlen(buffer), "Moving left."); 
 		}
 		
 		/* Move clockwise if right LED reads brighter light */
 		else if(leds.direction == GOCLOCKWISE)
 		{
-			motor.clock = 1;
-			moveMotor(&motor); // run through one cycle
+			motor.direction = GOCLOCKWISE;
 			sprintf(buffer + strlen(buffer), "Moving right."); 
 		}
 		
 		/* Do nothing and idle position */
 		else
 		{
+			motor.direction = IDLE;
 			sprintf(buffer + strlen(buffer), "Idling."); 
 		}
 		
+		/* Execute motor movement */
+		moveMotor(&motor);
+		
+		/* Send data over serial */
 		sprintf(buffer + strlen(buffer), "\n\r");
 		write_uart(buffer);
 	}
