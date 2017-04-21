@@ -21,15 +21,11 @@ int main()
 	initADC();
 	
 	/* LED Setup */
-	uint16_t leds[3];
-	char ledChannels[] = {0, 1, 2};
-	char leftLED = 0;
-	char middleLED = 1;
-	char rightLED = 2;
+	LEDS leds = leds_init(0, 1, 2);
 	
 	/* Thermistor Setup */
-	Thermistor therm1 = therm1_init(0);
-	Thermistor therm2 = therm2_init(1);
+	Thermistor therm1 = therm1_init(3);
+	Thermistor therm2 = therm2_init(4);
 	
 	while(1)
 	{
