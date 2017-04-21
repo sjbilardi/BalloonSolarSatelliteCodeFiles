@@ -32,46 +32,45 @@ int main()
 	
 	while(1)
 	{
-		sprintf(buffer, ""); // reset buffer
+		sprintf(buffer, ""); 	// reset buffer
 		
-		getTemp(&therm1);
-		//getTemp(&therm2);
+		getTemp(&therm1); 	// get temp1
+		getTemp(&therm2);	// get temp2
 		
-		dtostrf(therm1.temp, 5, 3, buffer + strlen(buffer));
+		/* Print Temperature Values */
+		dtostrf(therm1.temp, 5, 3, buffer + strlen(buffer));	// convert double to string
 		sprintf(buffer + strlen(buffer), " ");
-		dtostrf(therm2.temp, 5, 3, buffer + strlen(buffer));
+		dtostrf(therm2.temp, 5, 3, buffer + strlen(buffer));	// convert double to string
 		
-		//sprintf(buffer + strlen(buffer), "%d %d ", therm1.adcVal, therm2.adcVal);
+		/* Read LEDs */
+		for(i=0; i<sizeof(leds)/sizeof(int); i++)
+		{
+			leds[i] = readAnalog(ledChannels[i]);
+			sprintf(buffer + strlen(buffer), "%d ", leds[i]); 
+		}
 		
-		//sprintf(buffer + strlen(buffer), "%d %d ", therm1.temp, therm2.temp);
+		/* Move counter clockwise if left LED reads brighter light */
+		if((leds[leftLED] > leds[middleLED]) && (leds[leftLED] > leds[rightLED]))
+		{
+			motor.clock = 0; // move counter clockwise
+			moveMotor(&motor); // run through one cycle
+			sprintf(buffer + strlen(buffer), "Moving left."); 
+		}
 		
-		//// read LEDs
-		//for(i=0; i<sizeof(leds)/sizeof(int); i++)
-		//{
-			//leds[i] = readAnalog(ledChannels[i]);
-			//sprintf(buffer + strlen(buffer), "%d ", leds[i]); 
-		//}
-		//
-		//// move counter clockwise if left LED reads brighter light
-		//if((leds[leftLED] > leds[middleLED]) && (leds[leftLED] > leds[rightLED]))
-		//{
-			//motor.clock = 0; // move counter clockwise
-			//moveMotor(&motor); // run through one cycle
-			//sprintf(buffer + strlen(buffer), "Moving left."); 
-		//}
-		//
-		//// move clockwise if right LED reads brighter light
-		//else if((leds[rightLED] > leds[middleLED]) && (leds[rightLED] > leds[leftLED]))
-		//{
-			//motor.clock = 1;
-			//moveMotor(&motor); // run through one cycle
-			//sprintf(buffer + strlen(buffer), "Moving right."); 
-		//}
-		//else
-		//{
-			//sprintf(buffer + strlen(buffer), "Idling."); 
-		//}
-		//
+		/* Move clockwise if right LED reads brighter light */
+		else if((leds[rightLED] > leds[middleLED]) && (leds[rightLED] > leds[leftLED]))
+		{
+			motor.clock = 1;
+			moveMotor(&motor); // run through one cycle
+			sprintf(buffer + strlen(buffer), "Moving right."); 
+		}
+		
+		/* Do nothing and idle position */
+		else
+		{
+			sprintf(buffer + strlen(buffer), "Idling."); 
+		}
+		
 		sprintf(buffer + strlen(buffer), "\n\r");
 		write_uart(buffer);
 	}
