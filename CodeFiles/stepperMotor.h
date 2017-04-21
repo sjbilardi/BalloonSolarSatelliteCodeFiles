@@ -1,9 +1,5 @@
 #include "commonHeaders.h"
 
-#define WAVESTEPMODE 0 // waveStepMode
-#define FULLSTEPMODE 1 // fullStepMode
-#define HALFSTEPMODE 2 // halfStepMode
-
 /* Motor */
 typedef struct {
 	int waveSteps[4];
