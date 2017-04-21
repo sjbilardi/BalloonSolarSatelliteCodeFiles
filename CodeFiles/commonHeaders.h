@@ -19,7 +19,6 @@
 #define MOVINGCOUNTERCLOCK  1 // sun detected on left  led; moving counterclowise
 #define IDLING              2 // satellite oriented towards sun; idling position
 #define BATTERYLOW          3 // battery voltage low; reaching specified limit
-#define 
 
 /* Enable debug serial outputs */ 
 #define DEBUG 0
