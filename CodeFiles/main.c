@@ -21,10 +21,10 @@ int main()
 	
 	/* LED Setup */
 	uint16_t leds[3];
-	int ledChannels[] = {0, 1, 2};
-	int leftLED = 0;
-	int middleLED = 1;
-	int rightLED = 2;
+	char ledChannels[] = {0, 1, 2};
+	char leftLED = 0;
+	char middleLED = 1;
+	char rightLED = 2;
 	
 	/* Thermistor Setup */
 	Thermistor therm1 = therm1_init(0);
