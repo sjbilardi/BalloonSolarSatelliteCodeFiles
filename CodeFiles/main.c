@@ -40,14 +40,10 @@ int main()
 		dtostrf(therm2.temp, 5, 3, buffer + strlen(buffer));	// convert double to string
 		
 		/* Read LEDs */
-		for(i=0; i<sizeof(leds)/sizeof(int); i++)
-		{
-			leds[i] = readAnalog(ledChannels[i]);
-			sprintf(buffer + strlen(buffer), "%d ", leds[i]); 
-		}
+		getLEDSVal(&leds);
 		
 		/* Move counter clockwise if left LED reads brighter light */
-		if((leds[leftLED] > leds[middleLED]) && (leds[leftLED] > leds[rightLED]))
+		if(leds.direction == GOCOUNTERCLOCKWISE)
 		{
 			motor.clock = 0; // move counter clockwise
 			moveMotor(&motor); // run through one cycle
@@ -55,7 +51,7 @@ int main()
 		}
 		
 		/* Move clockwise if right LED reads brighter light */
-		else if((leds[rightLED] > leds[middleLED]) && (leds[rightLED] > leds[leftLED]))
+		else if(leds.direction == GOCLOCKWISE)
 		{
 			motor.clock = 1;
 			moveMotor(&motor); // run through one cycle
