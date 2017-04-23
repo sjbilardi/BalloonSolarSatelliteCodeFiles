@@ -4,17 +4,17 @@
 #include "thermistors.h"
 #include "stepperMotor.h"
 #include "LEDComm.h"
-#include "allInterrupts.h"
+//#include "allInterrupts.h"
 
 int main()
 {
 	int i;
-	char buffer[40] = {"\0"};
+	char buffer[50] = {"\0"};
 
-	uart_init();				// initialize the UART for serial communication with computer
+	uart_init();					// initialize the UART for serial communication with computer
 	
 	/* Motor Setup */
-	Motor motor = motor_init(0x0F);		// initialize motor to pins 0-3 on PORTB
+	Motor motor = motor_init(0x0F);	// initialize motor to pins 0-3 on PORTB
 	motor.mode = FULLSTEPMODE;		// set motor to move using full step pattern
 	
 	/* ADC Setup */
@@ -31,16 +31,21 @@ int main()
 	{
 		sprintf(buffer, ""); 	// reset buffer
 		
-		getTemp(&therm1); 	// get temp1
-		getTemp(&therm2);	// get temp2
+		getTemp(&therm1); 		// get temp1
+		getTemp(&therm2);		// get temp2
 		
 		/* Print Temperature Values */
 		dtostrf(therm1.temp, 5, 3, buffer + strlen(buffer));	// convert double to string
 		sprintf(buffer + strlen(buffer), " ");
 		dtostrf(therm2.temp, 5, 3, buffer + strlen(buffer));	// convert double to string
+		sprintf(buffer + strlen(buffer), " ");
 		
 		/* Read LEDs */
 		getLEDSVal(&leds);
+		for(i=0;i<sizeof(leds.val)/sizeof(uint16_t);i++)
+		{
+			sprintf(buffer + strlen(buffer), "%d ", leds.val[i]);
+		}
 		
 		/* Move counter clockwise if left LED reads brighter light */
 		if(leds.direction == GOCOUNTERCLOCKWISE)

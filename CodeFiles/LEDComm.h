@@ -14,13 +14,14 @@ typedef struct {
 	} LEDS;
 
 /* LEDS Functions */
-LEDS leds_init(char rightLEDpin, char middleLEDpin, char rightLEDpin)
+LEDS leds_init(char leftLEDpin, char middleLEDpin, char rightLEDpin)
 {
 	LEDS leds = {	{0, 0, 0},  // default val to zero
 		0, // left LED index
 		1, // middle LED index
-          	2, // right LED index
-          	{leftLEDpin, middleLEDpin, rightLEDpin}}; // 
+        2, // right LED index
+		IDLE,
+        {leftLEDpin, middleLEDpin, rightLEDpin}}; // 
 	return leds;
 }
 
@@ -41,7 +42,7 @@ void getLEDSVal(LEDS *leds)
 	}
 		
 	/* Move clockwise if right LED reads brighter light */
-	else if((leds->val[leds->rightLED] > leds->val[leds->middleLED]) && (leds->val[leds->rightLED] > leds-val[leds->leftLED]))
+	else if((leds->val[leds->rightLED] > leds->val[leds->middleLED]) && (leds->val[leds->rightLED] > leds->val[leds->leftLED]))
 	{
 		leds->direction = GOCLOCKWISE;
 	}

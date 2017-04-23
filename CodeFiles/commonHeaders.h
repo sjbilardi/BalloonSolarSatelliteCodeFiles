@@ -5,7 +5,7 @@
 #include <util/delay.h>
 
 /* Options for satellite direction movement */
-#define GOCOUNTERCLOCK  0
+#define GOCOUNTERCLOCKWISE  0
 #define IDLE            1
 #define GOCLOCKWISE     2
 
@@ -20,5 +20,6 @@
 #define IDLING              2 // satellite oriented towards sun; idling position
 #define BATTERYLOW          3 // battery voltage low; reaching specified limit
 
-/* Enable debug serial outputs */ 
+/* Enable 
+ serial outputs */ 
 #define DEBUG 0

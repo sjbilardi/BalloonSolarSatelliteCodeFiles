@@ -26,7 +26,7 @@ Motor motor_init(char pins)
 					4, // fullStepsSize
 					8, // halfStepsSize
 					FULLSTEPMODE, // mode (default = fullStepMode)
-					1, // enable clockwise movement
+					IDLE, // Idle position
 					pins}; // PORTB pins 0-3
 	DDRB |= pins; // set register B pins to high; configured as high
 	return motor;
@@ -36,7 +36,7 @@ void moveMotor(Motor *motor)
 {
 	int i = 0;
 	int *steps; 
-	char numbStep;
+	char numbStep = 0;
 	
 	switch(motor->mode)
 	{
