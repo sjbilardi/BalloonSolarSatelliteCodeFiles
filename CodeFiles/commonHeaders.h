@@ -16,10 +16,11 @@
 
 /* Comment codes */
 #define MOVINGCLOCK         0 // sun detected on right led; moving clockwise
-#define MOVINGCOUNTERCLOCK  1 // sun detected on left  led; moving counterclowise
+#define MOVINGCOUNTERCLOCK  1 // sun detected on left  led; moving counterclockwise
 #define IDLING              2 // satellite oriented towards sun; idling position
 #define BATTERYLOW          3 // battery voltage low; reaching specified limit
 
 /* Enable 
  serial outputs */ 
 #define DEBUG 0
+#define PRINTPRVALS 0

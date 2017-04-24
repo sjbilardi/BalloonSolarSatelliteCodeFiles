@@ -22,8 +22,8 @@ VoltageProbes voltageProbes_init(char pin1, char pin2)
 									5.1, // k-ohms
 									5.1, // k-ohms
 									2,	 // ohms
-									0,
-									1,
+									0,	 // battery V index
+									1,	 // resistor V index
 									{pin1, pin2}};
 	return voltageProbes;
 }

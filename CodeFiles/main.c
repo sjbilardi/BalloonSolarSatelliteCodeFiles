@@ -21,7 +21,7 @@
 int main()
 {
 	int i;
-	char buffer[50] = {"\0"};
+	char buffer[60] = {"\0"};
 
 	uart_init();					// initialize the UART for serial communication with computer
 	
@@ -42,45 +42,64 @@ int main()
 	/* Voltage Probes Setup */
 	VoltageProbes voltageProbes = voltageProbes_init(VPROBEBATTPIN, VPROBERESPIN);
 	
+	_delay_ms(250); 
+	
 	while(1)
 	{
 		sprintf(buffer, ""); 	// reset buffer
 		
+		/* Read Temperature Values */
 		getTemp(&therm1); 		// get temp1
 		getTemp(&therm2);		// get temp2
 		
 		/* Print Temperature Values */
-		dtostrf(therm1.temp, 5, 3, buffer + strlen(buffer));	// convert double to string
+		dtostrf(therm1.temp, 4, 3, buffer + strlen(buffer));	// convert double to string
 		sprintf(buffer + strlen(buffer), " ");
 		dtostrf(therm2.temp, 5, 3, buffer + strlen(buffer));	// convert double to string
+		//sprintf(buffer + strlen(buffer), " ");
+		
+		/* Read Voltage Values */
+		readVoltageCurrent(&voltageProbes);
+		
+		/* Print Battery Voltage and Current */
+		dtostrf(voltageProbes.voltage[voltageProbes.battVProbe], 6, 3, buffer + strlen(buffer));	// battery voltage (V)
+		sprintf(buffer + strlen(buffer), " ");
+		dtostrf(voltageProbes.current, 5, 3, buffer + strlen(buffer));								// battery current (mA)
+		sprintf(buffer + strlen(buffer), " ");
+		
+		/* Print Sun Angle */
+		dtostrf(30.0, 5, 3, buffer + strlen(buffer)); // degrees
 		sprintf(buffer + strlen(buffer), " ");
 		
 		/* Read LEDs */
 		getLEDSVal(&leds);
 		for(i=0;i<sizeof(leds.adcVal)/sizeof(uint16_t);i++)
 		{
-			sprintf(buffer + strlen(buffer), "%d ", leds.adcVal[i]);
+			if(PRINTPRVALS == 1)
+			{
+				sprintf(buffer + strlen(buffer), "%d", leds.adcVal[i]);
+			}
 		}
 		
 		/* Move counter clockwise if left LED reads brighter light */
 		if(leds.direction == GOCOUNTERCLOCKWISE)
 		{
 			motor.direction = GOCOUNTERCLOCKWISE; // move counter clockwise
-			sprintf(buffer + strlen(buffer), "Moving left."); 
+			sprintf(buffer + strlen(buffer), "%d", MOVINGCOUNTERCLOCK); 
 		}
 		
 		/* Move clockwise if right LED reads brighter light */
 		else if(leds.direction == GOCLOCKWISE)
 		{
 			motor.direction = GOCLOCKWISE;
-			sprintf(buffer + strlen(buffer), "Moving right."); 
+			sprintf(buffer + strlen(buffer), "%d", MOVINGCLOCK); 
 		}
 		
 		/* Do nothing and idle position */
 		else
 		{
 			motor.direction = IDLE;
-			sprintf(buffer + strlen(buffer), "Idling."); 
+			sprintf(buffer + strlen(buffer), "%d", IDLING); 
 		}
 		
 		/* Execute motor movement */
@@ -88,9 +107,6 @@ int main()
 		
 		/* Send data over serial */
 		sprintf(buffer + strlen(buffer), "\n\r");
-
-		//sprintf(buffer, ""); 	// reset buffer
-		//sprintf(buffer + strlen(buffer), "This is a test.\n\r");
 		write_uart(buffer);
 	}
 
