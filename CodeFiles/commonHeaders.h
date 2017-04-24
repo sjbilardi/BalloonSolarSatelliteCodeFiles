@@ -13,6 +13,8 @@
 #define WAVESTEPMODE 0 // waveStepMode
 #define FULLSTEPMODE 1 // fullStepMode
 #define HALFSTEPMODE 2 // halfStepMode
+#define BYCYCLE		 3 // Move one cycle when during function call
+#define BYDEGREES	 4 // Move number of degrees during function call
 
 /* Comment codes */
 #define MOVINGCLOCK         0 // sun detected on right led; moving clockwise

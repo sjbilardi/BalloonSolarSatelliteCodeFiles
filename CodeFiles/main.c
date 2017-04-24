@@ -8,15 +8,15 @@
 //#include "allInterrupts.h"
 
 /* Pin Layout */
-#define LEDLPIN			0	// Photoresistor Left
-#define LEDMPIN			1	// Photoresistor Middle
-#define LEDRPIN			2	// Photoresistor Right
+#define VPROBEBATTPIN	0	// Voltage Probe Battery
+#define VPROBERESPIN	1	// Voltage Probe Resistor
 
-#define THERM1PIN		3	// Thermistor 1
-#define THERM2PIN		4	// Thermistor 2
+#define LEDLPIN			2	// Photoresistor Left
+#define LEDMPIN			3	// Photoresistor Middle
+#define LEDRPIN			4	// Photoresistor Right
 
-#define VPROBEBATTPIN	5	// Voltage Probe Battery
-#define VPROBERESPIN	6	// Voltage Probe Resistor
+#define THERM1PIN		5	// Thermistor 1
+#define THERM2PIN		6	// Thermistor 2
 
 int main()
 {
@@ -26,7 +26,7 @@ int main()
 	uart_init();					// initialize the UART for serial communication with computer
 	
 	/* Motor Setup */
-	Motor motor = motor_init(0x0F);	// initialize motor to pins 0-3 on PORTB
+	Motor motor = motor_init4(0x0F);// initialize motor to pins 0-3 on PORTB
 	motor.mode = FULLSTEPMODE;		// set motor to move using full step pattern
 	
 	/* ADC Setup */
