@@ -1,10 +1,22 @@
 #include "commonHeaders.h"
 #include "serialComm.h"
 #include "adcComm.h"
-#include "thermistors.h"
-#include "stepperMotor.h"
 #include "LEDComm.h"
+#include "thermistors.h"
+#include "voltageProbes.h"
+#include "stepperMotor.h"
 //#include "allInterrupts.h"
+
+/* Pin Layout */
+#define LEDLPIN			0	// Photoresistor Left
+#define LEDMPIN			1	// Photoresistor Middle
+#define LEDRPIN			2	// Photoresistor Right
+
+#define THERM1PIN		3	// Thermistor 1
+#define THERM2PIN		4	// Thermistor 2
+
+#define VPROBEBATTPIN	5	// Voltage Probe Battery
+#define VPROBERESPIN	6	// Voltage Probe Resistor
 
 int main()
 {
@@ -21,11 +33,14 @@ int main()
 	initADC();
 	
 	/* LED Setup */
-	LEDS leds = leds_init(0, 1, 2);
+	LEDS leds = leds_init(LEDLPIN, LEDMPIN, LEDRPIN);
 	
 	/* Thermistor Setup */
-	Thermistor therm1 = therm1_init(3);
-	Thermistor therm2 = therm2_init(4);
+	Thermistor therm1 = therm1_init(THERM1PIN);
+	Thermistor therm2 = therm2_init(THERM2PIN);
+
+	/* Voltage Probes Setup */
+	VoltageProbes voltageProbes = voltageProbes_init(VPROBEBATTPIN, VPROBERESPIN);
 	
 	while(1)
 	{

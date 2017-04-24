@@ -35,7 +35,7 @@ Thermistor therm1_init(char pin)
 							0.0,
 							0.0,
 							pin	};
-return therm1;
+	return therm1;
 }
 
 Thermistor therm2_init(char pin)
