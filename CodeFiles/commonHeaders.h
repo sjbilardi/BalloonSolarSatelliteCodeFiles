@@ -16,6 +16,8 @@
 #define BYCYCLE		 3 // Move one cycle when during function call
 #define BYDEGREES	 4 // Move number of degrees during function call
 
+#define MOTORDELAY	10 // ms
+
 /* Comment codes */
 #define MOVINGCLOCK         0 // sun detected on right led; moving clockwise
 #define MOVINGCOUNTERCLOCK  1 // sun detected on left  led; moving counterclockwise

@@ -23,7 +23,7 @@ typedef struct {
 	char movementAmount;
 	double moveDegrees;
 	double sunAngle;
-	
+
 	char pins;
 	} Motor;
 
@@ -43,8 +43,8 @@ Motor motor_init1(char pins)
 					4, // fullStepsSize
 					8, // halfStepsSize
 					FULLSTEPMODE, // mode (default = fullStepMode)
-					BYCYCLE,
 					IDLE, // Idle position
+					BYCYCLE,
 					0.0,
 					0.0,
 					pins}; // PORTB pins 0-3
@@ -68,8 +68,8 @@ Motor motor_init4(char pins)
 					4, // fullStepsSize
 					8, // halfStepsSize
 					FULLSTEPMODE, // mode (default = fullStepMode)
-					BYCYCLE,
 					IDLE, // Idle position
+					BYCYCLE,
 					0.0,
 					0.0,
 					pins}; // PORTB pins 0-3
@@ -113,20 +113,20 @@ void moveMotor(Motor *motor)
 	
 	if(motor->direction == GOCLOCKWISE)
 	{	
-		if(motor.movementAmount == BYCYCLE)
+		if(motor->movementAmount == BYCYCLE)
 		{
 			for(i=0; i<numbStep; i++)
 			{
 				PORTB &= 0xF0; // Turn off the stepper motor only
-				_delay_ms(50); // Delay the time between turning off and on the motor
+				_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
 				PORTB |= *(steps + i); // Cause the stepper motor to make a step
-				_delay_ms(50); // Delay the time between the step and shutting off the motor
+				_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
 			}
 
-			motor.sunAngle = motor.sunAngle + res;
+			motor->sunAngle = motor->sunAngle + res;
 		}
 		
-		else if(motor.movementAmount == BYDEGREES)
+		else if(motor->movementAmount == BYDEGREES)
 		{
 
 		}
@@ -138,20 +138,20 @@ void moveMotor(Motor *motor)
 	}
 	else if(motor->direction == GOCOUNTERCLOCKWISE)
 	{
-		if(motor.movementAmount == BYCYCLE)
+		if(motor->movementAmount == BYCYCLE)
 		{
 			for(i=numbStep-1; i>=0; i--)
 			{
 				PORTB &= 0xF0; // Turn off the stepper motor only
-				_delay_ms(50); // Delay the time between turning off and on the motor
+				_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
 				PORTB |= *(steps + i); // Cause the stepper motor to make a step
-				_delay_ms(50); // Delay the time between the step and shutting off the motor
+				_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
 			}
 
-			motor.sunAngle = motor.sunAngle - res;
+			motor->sunAngle = motor->sunAngle - res;
 		}
 
-		else if(motor.movementAmount == BYDEGREES)
+		else if(motor->movementAmount == BYDEGREES)
 		{
 
 		}

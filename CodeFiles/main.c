@@ -26,8 +26,9 @@ int main()
 	uart_init();					// initialize the UART for serial communication with computer
 	
 	/* Motor Setup */
-	Motor motor = motor_init4(0x0F);// initialize motor to pins 0-3 on PORTB
+	Motor motor = motor_init1(0x0F);// initialize motor to pins 0-3 on PORTB
 	motor.mode = FULLSTEPMODE;		// set motor to move using full step pattern
+	motor.movementAmount = BYCYCLE;
 	
 	/* ADC Setup */
 	initADC();
@@ -68,7 +69,7 @@ int main()
 		sprintf(buffer + strlen(buffer), " ");
 		
 		/* Print Sun Angle */
-		dtostrf(30.0, 5, 3, buffer + strlen(buffer)); // degrees
+		dtostrf(motor.sunAngle, 2, 1, buffer + strlen(buffer)); // degrees
 		sprintf(buffer + strlen(buffer), " ");
 		
 		/* Read LEDs */
@@ -103,6 +104,7 @@ int main()
 		}
 		
 		/* Execute motor movement */
+		motor.direction = GOCLOCKWISE;
 		moveMotor(&motor);
 		
 		/* Send data over serial */
