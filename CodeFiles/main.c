@@ -104,7 +104,7 @@ int main()
 		}
 		
 		/* Execute motor movement */
-		motor.direction = GOCLOCKWISE;
+		//motor.direction = GOCLOCKWISE;
 		moveMotor(&motor);
 		
 		/* Send data over serial */
