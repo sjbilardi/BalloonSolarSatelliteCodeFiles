@@ -42,9 +42,9 @@ int main()
 		
 		/* Read LEDs */
 		getLEDSVal(&leds);
-		for(i=0;i<sizeof(leds.val)/sizeof(uint16_t);i++)
+		for(i=0;i<sizeof(leds.adcVal)/sizeof(uint16_t);i++)
 		{
-			sprintf(buffer + strlen(buffer), "%d ", leds.val[i]);
+			sprintf(buffer + strlen(buffer), "%d ", leds.adcVal[i]);
 		}
 		
 		/* Move counter clockwise if left LED reads brighter light */
@@ -73,6 +73,9 @@ int main()
 		
 		/* Send data over serial */
 		sprintf(buffer + strlen(buffer), "\n\r");
+
+		//sprintf(buffer, ""); 	// reset buffer
+		//sprintf(buffer + strlen(buffer), "This is a test.\n\r");
 		write_uart(buffer);
 	}
 
