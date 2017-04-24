@@ -21,7 +21,7 @@ VoltageProbes voltageProbes_init(char pin1, char pin2)
 									5.0, // V
 									5.1, // k-ohms
 									5.1, // k-ohms
-									2,	 // ohms
+									1,	 // ohms
 									0,	 // battery V index
 									1,	 // resistor V index
 									{pin1, pin2}};
@@ -37,10 +37,10 @@ void readVoltageCurrent(VoltageProbes *voltageProbes)
 	{
 		voltageProbes->adcVal[i] = readAnalog(voltageProbes->pin[i]);
 		voltageProbes->voltage[i] = (((double)voltageProbes->adcVal[i]/1024)) * voltageProbes->vcc * 
-									(voltageProbes->R + voltageProbes->RL)/voltageProbes->R; // V
+									(voltageProbes->R + voltageProbes->RL)/voltageProbes->RL; // V
 	}
 
 	/* Calculate the current using the voltage values */
-	voltageProbes->current = fabs(voltageProbes->voltage[0] - voltageProbes->voltage[1]) / 
-							 voltageProbes->currentResistor * 1000; // mA
+	voltageProbes->current = (fabs(voltageProbes->voltage[0] - voltageProbes->voltage[1]) / 
+							 voltageProbes->currentResistor); // mA
 }

@@ -15,8 +15,8 @@
 #define THERM1PIN		3	// Thermistor 1
 #define THERM2PIN		4	// Thermistor 2
 
-#define VPROBEBATTPIN		5	// Voltage Probe Battery
-#define VPROBERESPIN		6	// Voltage Probe Resistor
+#define VPROBEBATTPIN	5	// Voltage Probe Battery
+#define VPROBERESPIN	6	// Voltage Probe Resistor
 
 int main()
 {
