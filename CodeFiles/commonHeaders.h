@@ -16,7 +16,7 @@
 #define BYCYCLE		 3 // Move one cycle when during function call
 #define BYDEGREES	 4 // Move number of degrees during function call
 
-#define MOTORDELAY	10 // ms
+#define MOTORDELAY	30 // ms
 
 /* Comment codes */
 #define MOVINGCLOCK         0 // sun detected on right led; moving clockwise
@@ -27,4 +27,4 @@
 /* Enable 
  serial outputs */ 
 #define DEBUG 0
-#define PRINTPRVALS 0
+#define PRINTPRVALS 1

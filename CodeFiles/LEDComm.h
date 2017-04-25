@@ -44,8 +44,11 @@ void getLEDSVal(LEDS *leds)
 	for(i=0; i<sizeof(leds->adcVal)/sizeof(uint16_t);i++)
 	{
 		leds->adcVal[i] = readAnalog(leds->pins[i]);
-		//leds->val[i] = abs(leds->val[i] - leds->offset[i]);
+		//leds->adcVal[i] = leds->adcVal[i] - leds->offset[i];
 	}
+	
+	//leds->adcVal[leds->rightLED] -= 200; 
+	//leds->adcVal[leds->middleLED] += 100; 
 	
 	/* Move counter clockwise if left photoresitor reads brighter light */
 	if((leds->adcVal[leds->leftLED] > leds->adcVal[leds->middleLED]) && (leds->adcVal[leds->leftLED] > leds->adcVal[leds->rightLED]))

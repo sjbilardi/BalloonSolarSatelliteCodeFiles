@@ -76,9 +76,9 @@ int main()
 		getLEDSVal(&leds);
 		for(i=0;i<sizeof(leds.adcVal)/sizeof(uint16_t);i++)
 		{
-			if(PRINTPRVALS == 1)
+			if(PRINTPRVALS)
 			{
-				sprintf(buffer + strlen(buffer), "%d", leds.adcVal[i]);
+				sprintf(buffer + strlen(buffer), "%d ", leds.adcVal[i]);
 			}
 		}
 		
@@ -106,6 +106,9 @@ int main()
 		/* Execute motor movement */
 		//motor.direction = GOCLOCKWISE;
 		moveMotor(&motor);
+		
+		//sprintf(buffer + strlen(buffer), " ");
+		//sprintf(buffer + strlen(buffer), "%d", motor.steps);
 		
 		/* Send data over serial */
 		sprintf(buffer + strlen(buffer), "\n\r");
