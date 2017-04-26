@@ -21,24 +21,53 @@
 
 #define DISTSENSORPIN	7	// IR Distance Sensor
 
-#define SUNDETECTMULT	2	// sun detection multiplier for max deviation
+#define RESETSUNANGLE	1
+#define KEEPSUNANGLE	0
 
-void findSun(Motor *motor, LEDS *leds)
+void findSun(Motor *motor, LEDS *leds, char resetSunAngle)
 {
 	//write_uart("Searching for sun...\n\r");
-	
+	uint16_t comp = leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex];
 	getLEDSVal(leds);
 	motor->direction = GOCLOCKWISE;
 	
 	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
-	while(leds->adcVal[leds->middleLED] < (leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
+	//while(leds->adcVal[leds->middleLED] < (leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
+	while(leds->adcVal[leds->middleLED] < comp)
 	{
 		getLEDSVal(leds);
 		moveMotor(motor);
 	}
 	
 	motor->direction = IDLE;
-	motor->sunAngle = 0;
+	
+	if(resetSunAngle == RESETSUNANGLE)
+	{
+		motor->sunAngle = 0;	
+	}
+}
+
+void findSun2(Motor *motor, LEDS *leds, char resetSunAngle)
+{
+	//write_uart("Searching for sun...\n\r");
+	uint16_t comp = leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex];
+	getLEDSVal(leds);
+	motor->direction = GOCLOCKWISE;
+	
+	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
+	//while(leds->adcVal[leds->middleLED] < (leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
+	while((leds->adcVal[leds->leftLED] < comp) && (leds->adcVal[leds->middleLED] < comp) && (leds->adcVal[leds->rightLED] < comp))
+	{
+		getLEDSVal(leds);
+		moveMotor(motor);
+	}
+	
+	motor->direction = IDLE;
+	
+	if(resetSunAngle == RESETSUNANGLE)
+	{
+		motor->sunAngle = 0;
+	}
 }
 
 int main()
@@ -69,7 +98,7 @@ int main()
 	/* Distance Sensor Setup */
 	DistanceSensor distanceSensor = distanceSensor_init(DISTSENSORPIN);
 	
-	findSun(&motor, &leds);
+	findSun(&motor, &leds, RESETSUNANGLE);
 	
 	_delay_ms(250); 
 	
@@ -117,13 +146,8 @@ int main()
 			}
 		}
 		
-		//while(leds.adcVal[leds.middleLED] < (leds.offsetAvg + SUNDETECTMULT*leds.deviation[leds.maxDeviationIndex]))
-		//{
-			//getLEDSVal(&leds);
-			//moveMotor(&motor);
-		//}
-		//
-		//motor.direction = IDLE;
+		/* Look for sun if it is lost */
+		//findSun2(&motor, &leds, KEEPSUNANGLE);
 		
 		/* Move counter clockwise if left LED reads brighter light */
 		if(leds.direction == GOCOUNTERCLOCKWISE)

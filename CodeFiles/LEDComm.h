@@ -79,13 +79,19 @@ void getLEDSVal(LEDS *leds)
 	/* Move counter clockwise if left photoresitor reads brighter light */
 	if((leds->adcVal[leds->leftLED] > leds->adcVal[leds->middleLED]) && (leds->adcVal[leds->leftLED] > leds->adcVal[leds->rightLED]))
 	{
-		leds->direction = GOCOUNTERCLOCKWISE;
+		//if((abs(leds->adcVal[leds->leftLED] - leds->adcVal[leds->middleLED]) > SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]) && (abs(leds->adcVal[leds->leftLED] - leds->adcVal[leds->rightLED]) > SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
+		//{
+			leds->direction = GOCOUNTERCLOCKWISE;	
+		//}
 	}
 		
 	/* Move clockwise if right photoresitor reads brighter light */
 	else if((leds->adcVal[leds->rightLED] > leds->adcVal[leds->middleLED]) && (leds->adcVal[leds->rightLED] > leds->adcVal[leds->leftLED]))
 	{
-		leds->direction = GOCLOCKWISE;
+		//if((abs(leds->adcVal[leds->rightLED] - leds->adcVal[leds->middleLED]) > SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]) && (abs(leds->adcVal[leds->rightLED] - leds->adcVal[leds->leftLED]) > SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
+		//{
+			leds->direction = GOCLOCKWISE;
+		//}
 	}
 		
 	/* Do nothing and idle position */
