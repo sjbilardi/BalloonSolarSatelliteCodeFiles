@@ -4,10 +4,12 @@
 #define F_CPU 1000000UL
 #include <util/delay.h>
 
+#define VCC 5.1 // V
+
 /* Options for satellite direction movement */
 #define GOCOUNTERCLOCKWISE  0
-#define IDLE            1
-#define GOCLOCKWISE     2
+#define IDLE				1
+#define GOCLOCKWISE			2
 
 /* Motor step options */
 #define WAVESTEPMODE 0 // waveStepMode
@@ -24,8 +26,10 @@
 #define IDLING              2 // satellite oriented towards sun; idling position
 #define BATTERYLOW          3 // battery voltage low; reaching specified limit
 #define SEEKINGSUN          4 // searching for sun
+#define PROXIMITYWARNING	5 // object detected within ~1 meter
+#define NOOBJDETECTED		6 // no object detected; path ahead of spacecraft clear
 
 /* Enable 
  serial outputs */ 
 #define DEBUG 0
-#define PRINTPRVALS 1
+#define PRINTPRVALS 0

@@ -121,13 +121,21 @@ void moveMotor(Motor *motor)
 			for(i=0; i<numbStep; i++)
 			{
 				PORTB &= 0xF0; // Turn off the stepper motor only
-				_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
+				//_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
 				PORTB |= *(steps + i); // Cause the stepper motor to make a step
 				_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
+				
+				/* Increment sun angle */
+				motor->sunAngle = motor->sunAngle + res;
+				motor->steps = motor->steps + 1;
+				
+				if(motor->sunAngle < 360){}
+				else
+				{
+					motor->sunAngle = motor->sunAngle - 360;
+					motor->steps = motor->steps - stepNumb;		
+				}
 			}
-
-			motor->sunAngle = motor->sunAngle + res;
-			motor->steps = motor->steps + 1;
 		}
 		
 		else if(motor->movementAmount == BYDEGREES)
@@ -147,13 +155,20 @@ void moveMotor(Motor *motor)
 			for(i=numbStep-1; i>=0; i--)
 			{
 				PORTB &= 0xF0; // Turn off the stepper motor only
-				_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
+				//_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
 				PORTB |= *(steps + i); // Cause the stepper motor to make a step
 				_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
+				
+				/* Decrement sun angle */
+				motor->sunAngle = motor->sunAngle - res;
+				motor->steps = motor->steps - 1;
+				
+				if(motor->sunAngle < 0)
+				{
+					motor->sunAngle = motor->sunAngle + 360;
+					motor->steps = motor->steps + stepNumb;
+				}
 			}
-
-			motor->sunAngle = motor->sunAngle - res;
-			motor->steps = motor->steps - 1;
 		}
 
 		else if(motor->movementAmount == BYDEGREES)
@@ -170,16 +185,4 @@ void moveMotor(Motor *motor)
 	{
 		// Idle
 	}
-}
-
-void findSun(Motor *motor)
-{
-	/*
-		Move motor in a direction.
-	*/
-	int i;
-	int *steps; 
-	char numbStep = 0;
-
-
 }

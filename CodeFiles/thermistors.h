@@ -8,7 +8,6 @@ typedef struct {
 	double To;
 	double B;
 	
-	double Vcc;
 	double Vrange;
 	double R;
 	double Rt;
@@ -27,8 +26,7 @@ Thermistor therm1_init(char pin)
 							9.88,		// k-ohm
 							297.5,		// K
 							4296.71,
-							5.0,
-							5.0,
+							VCC,
 							12.3231,	// k-ohm
 							0,
 							0,
@@ -44,8 +42,7 @@ Thermistor therm2_init(char pin)
 							9.83,		// k-ohm
 							297.5,		// K
 							4241.48,
-							5.0,
-							5.0,
+							VCC,
 							12.2836,	// k-ohm
 							0,
 							0,
@@ -68,7 +65,7 @@ void getTemp(Thermistor *therm)
 	
 	therm->Vo = ((double)therm->adcVal)/pow(2,10) * therm->Vrange;
 	
-	therm->Rt = therm->R*(therm->Vcc/therm->Vo - 1); 
+	therm->Rt = therm->R*(VCC/therm->Vo - 1); 
 	
 	therm->temp = pow((log(therm->Rt/therm->Ro)/therm->B + 1/therm->To), -1) - 273.15;
 	

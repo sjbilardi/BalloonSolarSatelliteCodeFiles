@@ -13,6 +13,9 @@ typedef struct {
 	char pins[3];
 
 	uint16_t offset[3];
+	uint16_t offsetAvg;
+	uint16_t deviation[3];
+	char maxDeviationIndex;
 	} LEDS;
 
 /* LEDS Functions */
@@ -25,15 +28,41 @@ LEDS leds_init(char leftLEDpin, char middleLEDpin, char rightLEDpin)
         2, // right LED index
 		IDLE,
         {leftLEDpin, middleLEDpin, rightLEDpin},
-		{0, 0, 0}};
+		{0, 0, 0},
+		0,
+		{0, 0, 0},
+		0};
 
-	/* Read Photoresitor ADC Noise Values */
-	for(i=0; i<sizeof(leds.offset)/sizeof(uint16_t);i++)
-	{
-		leds.offset[i] = readAnalog(leds.pins[i]);
-	}
+	getMaxDeviation(&leds);
 
 	return leds;
+}
+
+void getMaxDeviation(LEDS *leds)
+{
+	char i;
+	
+	/* Read Photoresitor ADC Noise Values */
+	for(i=0; i<sizeof(leds->offset)/sizeof(uint16_t);i++)
+	{
+		leds->offset[i] = readAnalog(leds->pins[i]);
+		leds->offsetAvg = leds->offset[i]; // sum offset values
+	}
+	
+	leds->offsetAvg = leds->offsetAvg / (sizeof(leds->offset)/sizeof(uint16_t)); // get average of offset values
+	
+	/* Find Maximum Deviation from Offset Average */
+	for(i=0; i<sizeof(leds->offset)/sizeof(uint16_t);i++)
+	{
+		leds->deviation[i] = abs(leds->offsetAvg - leds->offset[i]);
+		if(i > 0)
+		{
+			if(leds->deviation[i] > leds->deviation[i-1])
+			{
+				leds->maxDeviationIndex = i;
+			}
+		}
+	}
 }
 
 void getLEDSVal(LEDS *leds)
@@ -46,9 +75,6 @@ void getLEDSVal(LEDS *leds)
 		leds->adcVal[i] = readAnalog(leds->pins[i]);
 		//leds->adcVal[i] = leds->adcVal[i] - leds->offset[i];
 	}
-	
-	//leds->adcVal[leds->rightLED] -= 200; 
-	//leds->adcVal[leds->middleLED] += 100; 
 	
 	/* Move counter clockwise if left photoresitor reads brighter light */
 	if((leds->adcVal[leds->leftLED] > leds->adcVal[leds->middleLED]) && (leds->adcVal[leds->leftLED] > leds->adcVal[leds->rightLED]))

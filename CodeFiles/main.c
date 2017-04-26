@@ -4,6 +4,7 @@
 #include "LEDComm.h"
 #include "thermistors.h"
 #include "voltageProbes.h"
+#include "distanceSensor.h"
 #include "stepperMotor.h"
 //#include "allInterrupts.h"
 
@@ -17,6 +18,28 @@
 
 #define THERM1PIN		5	// Thermistor 1
 #define THERM2PIN		6	// Thermistor 2
+
+#define DISTSENSORPIN	7	// IR Distance Sensor
+
+#define SUNDETECTMULT	2	// sun detection multiplier for max deviation
+
+void findSun(Motor *motor, LEDS *leds)
+{
+	//write_uart("Searching for sun...\n\r");
+	
+	getLEDSVal(leds);
+	motor->direction = GOCLOCKWISE;
+	
+	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
+	while(leds->adcVal[leds->middleLED] < (leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
+	{
+		getLEDSVal(leds);
+		moveMotor(motor);
+	}
+	
+	motor->direction = IDLE;
+	motor->sunAngle = 0;
+}
 
 int main()
 {
@@ -42,6 +65,11 @@ int main()
 
 	/* Voltage Probes Setup */
 	VoltageProbes voltageProbes = voltageProbes_init(VPROBEBATTPIN, VPROBERESPIN);
+	
+	/* Distance Sensor Setup */
+	DistanceSensor distanceSensor = distanceSensor_init(DISTSENSORPIN);
+	
+	findSun(&motor, &leds);
 	
 	_delay_ms(250); 
 	
@@ -72,6 +100,13 @@ int main()
 		dtostrf(motor.sunAngle, 2, 1, buffer + strlen(buffer)); // degrees
 		sprintf(buffer + strlen(buffer), " ");
 		
+		/* Read Distance */
+		getDistance(&distanceSensor);
+		
+		///* Print Distance */
+		//dtostrf(distanceSensor.distance, 1, 2, buffer + strlen(buffer));							// distance (cm)
+		//sprintf(buffer + strlen(buffer), " ");
+		
 		/* Read LEDs */
 		getLEDSVal(&leds);
 		for(i=0;i<sizeof(leds.adcVal)/sizeof(uint16_t);i++)
@@ -82,25 +117,42 @@ int main()
 			}
 		}
 		
+		//while(leds.adcVal[leds.middleLED] < (leds.offsetAvg + SUNDETECTMULT*leds.deviation[leds.maxDeviationIndex]))
+		//{
+			//getLEDSVal(&leds);
+			//moveMotor(&motor);
+		//}
+		//
+		//motor.direction = IDLE;
+		
 		/* Move counter clockwise if left LED reads brighter light */
 		if(leds.direction == GOCOUNTERCLOCKWISE)
 		{
 			motor.direction = GOCOUNTERCLOCKWISE; // move counter clockwise
-			sprintf(buffer + strlen(buffer), "%d", MOVINGCOUNTERCLOCK); 
+			sprintf(buffer + strlen(buffer), "%d ", MOVINGCOUNTERCLOCK); 
 		}
 		
 		/* Move clockwise if right LED reads brighter light */
 		else if(leds.direction == GOCLOCKWISE)
 		{
 			motor.direction = GOCLOCKWISE;
-			sprintf(buffer + strlen(buffer), "%d", MOVINGCLOCK); 
+			sprintf(buffer + strlen(buffer), "%d ", MOVINGCLOCK); 
 		}
 		
 		/* Do nothing and idle position */
 		else
 		{
 			motor.direction = IDLE;
-			sprintf(buffer + strlen(buffer), "%d", IDLING); 
+			sprintf(buffer + strlen(buffer), "%d ", IDLING); 
+		}
+		
+		if(distanceSensor.proximityWarning)
+		{
+			sprintf(buffer + strlen(buffer), "%d", PROXIMITYWARNING);
+		}
+		else
+		{
+			sprintf(buffer + strlen(buffer), "%d", NOOBJDETECTED);
 		}
 		
 		/* Execute motor movement */
