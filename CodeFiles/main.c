@@ -6,7 +6,6 @@
 #include "voltageProbes.h"
 #include "distanceSensor.h"
 #include "stepperMotor.h"
-//#include "allInterrupts.h"
 
 /* Pin Layout */
 #define VPROBEBATTPIN	0	// Voltage Probe Battery
@@ -74,7 +73,6 @@ void calibrateLEDSMotor(Motor *motor, LEDS *leds)
 
 void findSun(Motor *motor, LEDS *leds)
 {
-	//write_uart("Searching for sun...\n\r");
 	char reorientationRequired = 0;
 	int i;
 	int numbSteps;
@@ -89,14 +87,18 @@ void findSun(Motor *motor, LEDS *leds)
 	}
 	
 	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
-	//while(leds->adcVal[leds->middleLED] < (leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
-	do
-	{
-		reorientationRequired = 1;
-		motor->direction = GOCLOCKWISE;
-		getLEDSVal(leds);
-		moveMotor(motor);
-	} while(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]);
+	if((leds->adcVal[leds->leftLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->leftLED]) &&
+		(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]) &&
+		(leds->adcVal[leds->rightLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->rightLED]))
+		{
+			do
+			{
+				reorientationRequired = 1;
+				motor->direction = GOCLOCKWISE;
+				getLEDSVal(leds);
+				moveMotor(motor);
+			} while(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]);
+		}
 	
 	if(reorientationRequired)
 	{
@@ -104,72 +106,6 @@ void findSun(Motor *motor, LEDS *leds)
 		leds->direction = IDLE;
 		motor->sunAngle = 0;
 	}
-}
-
-void findSunDuringWhileLoope(Motor *motor, LEDS *leds)
-{
-	//write_uart("Searching for sun...\n\r");
-	char reorientationRequired = 0;
-	int i;
-	int numbSteps;
-
-	if((motor->mode == FULLSTEPMODE) || (motor->mode == WAVESTEPMODE))
-	{
-		numbSteps = motor->fullStepNumb;
-	}
-	else // if motor->mode == HALFSTEPMODE
-	{
-		numbSteps = motor->halfStepNumb;
-	}
-	
-	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
-	//while(leds->adcVal[leds->middleLED] < (leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
-	if((leds->adcVal[leds->leftLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->leftLED]) &&
-		(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]) &&
-		(leds->adcVal[leds->rightLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->rightLED]))
-	{
-		do
-		{
-			reorientationRequired = 1;
-			motor->direction = GOCLOCKWISE;
-			getLEDSVal(leds);
-			moveMotor(motor);
-		} while((leds->adcVal[leds->leftLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->leftLED]) && 
-				(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]) && 
-				(leds->adcVal[leds->rightLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->rightLED]));
-	}
-	
-	if(reorientationRequired == 1)
-	{
-		motor->direction = IDLE;
-		leds->direction = IDLE;
-		//motor->sunAngle = 0;
-	}
-}
-
-void determineDirectionMovement(Motor *motor, LEDS *leds)
-{
-	getLEDSVal(leds);
-
-	///* Move counter clockwise if left photoresitor reads brighter light */
-	//if((leds->adcVal[leds->leftLED] > leds->adcVal[leds->middleLED]) &&
-	//(leds->adcVal[leds->leftLED] > leds->adcVal[leds->rightLED]))
-	//{
-		//leds->direction = GOCOUNTERCLOCKWISE;
-	//}
-	//
-	///* Move clockwise if right photoresitor reads brighter light */
-	//else if((leds->adcVal[leds->rightLED] > leds->adcVal[leds->middleLED]) &&
-	//(leds->adcVal[leds->rightLED] > leds->adcVal[leds->leftLED]))
-	//{
-		//leds->direction = GOCLOCKWISE;
-	//}
-	//
-	///* Do nothing and idle position */
-	//else
-	//{
-		//leds->direction = IDLE;
-	//}
 }
 
 int main()
@@ -240,12 +176,7 @@ int main()
 		/* Read Distance */
 		getDistance(&distanceSensor);
 		
-		///* Print Distance */
-		//dtostrf(distanceSensor.distance, 1, 2, buffer + strlen(buffer));							// distance (cm)
-		//sprintf(buffer + strlen(buffer), " ");
-		
 		/* Read LEDs */
-		//determineDirectionMovement(&motor, &leds);
 		getLEDSVal(&leds);
 		for(i=0;i<sizeof(leds.adcVal)/sizeof(uint16_t);i++)
 		{
@@ -255,8 +186,8 @@ int main()
 			}
 		}
 		
-		/* Look for sun if it is lost */
-		findSunDuringWhileLoope(&motor, &leds);
+		/* Check if Sun is Within Tracking Range and Search if it Is Lost */
+		findSun(&motor, &leds);
 		
 		/* Move counter clockwise if left LED reads brighter light */
 		if(leds.direction == GOCOUNTERCLOCKWISE)
@@ -289,11 +220,7 @@ int main()
 		}
 		
 		/* Execute motor movement */
-		//motor.direction = GOCLOCKWISE;
 		moveMotor(&motor);
-		
-		//sprintf(buffer + strlen(buffer), " ");
-		//sprintf(buffer + strlen(buffer), "%d", motor.steps);
 		
 		/* Send data over serial */
 		sprintf(buffer + strlen(buffer), "\n\r");

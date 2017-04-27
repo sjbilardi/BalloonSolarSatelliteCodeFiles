@@ -124,7 +124,6 @@ void moveMotor(Motor *motor)
 			for(i=0; i<numbStep; i++)
 			{
 				PORTB &= 0xF0; // Turn off the stepper motor only
-				//_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
 				PORTB |= *(steps + i); // Cause the stepper motor to make a step
 				_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
 				
@@ -143,19 +142,8 @@ void moveMotor(Motor *motor)
 		else if(motor->movementAmount == BYSTEP)
 		{
 			PORTB &= 0xF0; // Turn off the stepper motor only
-			//_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
 			PORTB |= *(steps + motor->stepSeqIndex); // Cause the stepper motor to make a step
 			_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
-
-			///* Increment sun angle */
-			//motor->sunAngle = motor->sunAngle + res;
-			//motor->steps = motor->steps + 1;
-			//
-			//if(motor->steps > stepNumb - 1)
-			//{
-				//motor->sunAngle = motor->sunAngle - 360;
-				//motor->steps = motor->steps - stepNumb;
-			//}
 		}
 
 		else
@@ -170,7 +158,6 @@ void moveMotor(Motor *motor)
 			for(i=numbStep-1; i>=0; i--)
 			{
 				PORTB &= 0xF0; // Turn off the stepper motor only
-				//_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
 				PORTB |= *(steps + i); // Cause the stepper motor to make a step
 				_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
 				
@@ -189,19 +176,8 @@ void moveMotor(Motor *motor)
 		else if(motor->movementAmount == BYSTEP)
 		{
 			PORTB &= 0xF0; // Turn off the stepper motor only
-			//_delay_ms(MOTORDELAY); // Delay the time between turning off and on the motor
 			PORTB |= *(steps + motor->stepSeqIndex); // Cause the stepper motor to make a step
 			_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
-			
-			///* Decrement sun angle */
-			//motor->sunAngle = motor->sunAngle - res;
-			//motor->steps = motor->steps - 1;
-			//
-			//if(motor->steps < 0)
-			//{
-				//motor->sunAngle = motor->sunAngle + 360;
-				//motor->steps = motor->steps + stepNumb;
-			//}
 		}
 
 		else

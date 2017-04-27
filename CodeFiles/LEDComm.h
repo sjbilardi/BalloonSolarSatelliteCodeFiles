@@ -12,9 +12,7 @@ typedef struct {
 	
 	char pins[3];
 
-	uint16_t offset[400][3];
-	uint16_t offsetAvg;
-	int maxDeviationIndex;
+	uint16_t offset[400][3]; // stores noise level for system
 	} LEDS;
 
 /* LEDS Functions */
@@ -27,11 +25,7 @@ LEDS leds_init(char leftLEDpin, char middleLEDpin, char rightLEDpin)
         2, // right LED index
 		IDLE,
         {leftLEDpin, middleLEDpin, rightLEDpin},
-		{0},
-		0,
-		0};
-
-	//getMaxDeviation(&leds);
+		{0}};
 
 	return leds;
 }

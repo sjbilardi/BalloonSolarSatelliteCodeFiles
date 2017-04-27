@@ -9,7 +9,6 @@ void initADC()
 
 	ADMUX |= (1<<REFS0); // This sets ADC reference to AVCC
 
-	// enable the ADC
 	ADCSRA |= (1<<ADEN); // Enable ADC
 }
 
@@ -17,13 +16,7 @@ uint16_t readAnalog(char channel)
 {
 	uint16_t adcVal;
 	
-	//ADMUX |= (channel & 0x0f);  //select input and ref
-	
 	ADMUX = (1<<REFS0) | (channel & 0x0f);  //select input and ref
-
-	//ADMUX = 0x40; // Reset ADMUX to reset channel to zero
-
-	//ADMUX |= channel; // set channel to MUX
 
 	ADCSRA |= (1 << ADSC); // Start ADC Conversions
 

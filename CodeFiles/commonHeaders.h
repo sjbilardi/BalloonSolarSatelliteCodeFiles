@@ -32,7 +32,6 @@
 #define PROXIMITYWARNING	5 // object detected within ~1 meter
 #define NOOBJDETECTED		6 // no object detected; path ahead of spacecraft clear
 
-/* Enable 
- serial outputs */ 
+/* Enable serial outputs */ 
 #define DEBUG 0
 #define PRINTPRVALS 0
