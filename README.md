@@ -5,6 +5,7 @@ The project will allow a mock satellite to:
 - measure the temperature using two seperate thermistors.
 - measure bus battery voltage.
 - measure bus battery current.
+- detect obstacles in path.
 - transmit telemetry to ground station.
 
 ## Updates:
