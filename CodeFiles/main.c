@@ -24,50 +24,152 @@
 #define RESETSUNANGLE	1
 #define KEEPSUNANGLE	0
 
-void findSun(Motor *motor, LEDS *leds, char resetSunAngle)
+void calibrateLEDSMotor(Motor *motor, LEDS *leds)
+{
+	int i;
+	int j;
+	char *steps;
+	char stepSize;
+	int numbSteps;
+
+	/* Reset step number in motor */
+	motor->steps = 0;
+
+	if((motor->mode == FULLSTEPMODE) || (motor->mode == WAVESTEPMODE))
+	{
+		steps = &motor->fullSteps;
+		numbSteps = motor->fullStepNumb;
+		stepSize = motor->fullStepsSize;
+	}
+	else // if motor->mode == HALFSTEPMODE
+	{
+		steps = &motor->halfSteps;
+		numbSteps = motor->halfStepNumb;
+		stepSize = motor->halfStepsSize;
+	}
+
+	/* Set motor direction */
+	motor->direction = GOCLOCKWISE;
+	motor->movementAmount = BYSTEP;
+
+	/* Record offset values */
+	while(motor->steps < numbSteps)
+	{
+		for(i=0; i<4; i++)
+		{
+			for(j=0; j<sizeof(leds->pins)/sizeof(char); j++) // read leds
+			{
+				leds->offset[motor->steps][j] = readAnalog(leds->pins[j]);
+			}
+			motor->stepSeqIndex = i;
+			moveMotor(motor);
+			motor->steps = motor->steps + 1;
+		}
+	}
+
+	motor->movementAmount = BYCYCLE;
+	leds->direction = IDLE;
+	motor->direction = IDLE;
+}
+
+void findSun(Motor *motor, LEDS *leds)
 {
 	//write_uart("Searching for sun...\n\r");
-	uint16_t comp = leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex];
-	getLEDSVal(leds);
-	motor->direction = GOCLOCKWISE;
+	char reorientationRequired = 0;
+	int i;
+	int numbSteps;
+
+	if((motor->mode == FULLSTEPMODE) || (motor->mode == WAVESTEPMODE))
+	{
+		numbSteps = motor->fullStepNumb;
+	}
+	else // if motor->mode == HALFSTEPMODE
+	{
+		numbSteps = motor->halfStepNumb;
+	}
 	
 	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
 	//while(leds->adcVal[leds->middleLED] < (leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
-	while(leds->adcVal[leds->middleLED] < comp)
+	do
 	{
+		reorientationRequired = 1;
+		motor->direction = GOCLOCKWISE;
 		getLEDSVal(leds);
 		moveMotor(motor);
-	}
+	} while(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]);
 	
-	motor->direction = IDLE;
-	
-	if(resetSunAngle == RESETSUNANGLE)
+	if(reorientationRequired)
 	{
-		motor->sunAngle = 0;	
+		motor->direction = IDLE;
+		leds->direction = IDLE;
+		motor->sunAngle = 0;
 	}
 }
 
-void findSun2(Motor *motor, LEDS *leds, char resetSunAngle)
+void findSunDuringWhileLoope(Motor *motor, LEDS *leds)
 {
 	//write_uart("Searching for sun...\n\r");
-	uint16_t comp = leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex];
-	getLEDSVal(leds);
-	motor->direction = GOCLOCKWISE;
+	char reorientationRequired = 0;
+	int i;
+	int numbSteps;
+
+	if((motor->mode == FULLSTEPMODE) || (motor->mode == WAVESTEPMODE))
+	{
+		numbSteps = motor->fullStepNumb;
+	}
+	else // if motor->mode == HALFSTEPMODE
+	{
+		numbSteps = motor->halfStepNumb;
+	}
 	
 	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
 	//while(leds->adcVal[leds->middleLED] < (leds->offsetAvg + SUNDETECTMULT*leds->deviation[leds->maxDeviationIndex]))
-	while((leds->adcVal[leds->leftLED] < comp) && (leds->adcVal[leds->middleLED] < comp) && (leds->adcVal[leds->rightLED] < comp))
+	if((leds->adcVal[leds->leftLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->leftLED]) &&
+		(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]) &&
+		(leds->adcVal[leds->rightLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->rightLED]))
 	{
-		getLEDSVal(leds);
-		moveMotor(motor);
+		do
+		{
+			reorientationRequired = 1;
+			motor->direction = GOCLOCKWISE;
+			getLEDSVal(leds);
+			moveMotor(motor);
+		} while((leds->adcVal[leds->leftLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->leftLED]) && 
+				(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]) && 
+				(leds->adcVal[leds->rightLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->rightLED]));
 	}
 	
-	motor->direction = IDLE;
-	
-	if(resetSunAngle == RESETSUNANGLE)
+	if(reorientationRequired == 1)
 	{
-		motor->sunAngle = 0;
+		motor->direction = IDLE;
+		leds->direction = IDLE;
+		//motor->sunAngle = 0;
 	}
+}
+
+void determineDirectionMovement(Motor *motor, LEDS *leds)
+{
+	getLEDSVal(leds);
+
+	///* Move counter clockwise if left photoresitor reads brighter light */
+	//if((leds->adcVal[leds->leftLED] > leds->adcVal[leds->middleLED]) &&
+	//(leds->adcVal[leds->leftLED] > leds->adcVal[leds->rightLED]))
+	//{
+		//leds->direction = GOCOUNTERCLOCKWISE;
+	//}
+	//
+	///* Move clockwise if right photoresitor reads brighter light */
+	//else if((leds->adcVal[leds->rightLED] > leds->adcVal[leds->middleLED]) &&
+	//(leds->adcVal[leds->rightLED] > leds->adcVal[leds->leftLED]))
+	//{
+		//leds->direction = GOCLOCKWISE;
+	//}
+	//
+	///* Do nothing and idle position */
+	//else
+	//{
+		//leds->direction = IDLE;
+	//}
 }
 
 int main()
@@ -98,7 +200,13 @@ int main()
 	/* Distance Sensor Setup */
 	DistanceSensor distanceSensor = distanceSensor_init(DISTSENSORPIN);
 	
-	findSun(&motor, &leds, RESETSUNANGLE);
+	/* Calibrate LEDS and Motor */
+	calibrateLEDSMotor(&motor, &leds);
+
+	_delay_ms(500);
+
+	/* Search for Sun */
+	findSun(&motor, &leds);
 	
 	_delay_ms(250); 
 	
@@ -137,6 +245,7 @@ int main()
 		//sprintf(buffer + strlen(buffer), " ");
 		
 		/* Read LEDs */
+		//determineDirectionMovement(&motor, &leds);
 		getLEDSVal(&leds);
 		for(i=0;i<sizeof(leds.adcVal)/sizeof(uint16_t);i++)
 		{
@@ -147,7 +256,7 @@ int main()
 		}
 		
 		/* Look for sun if it is lost */
-		//findSun2(&motor, &leds, KEEPSUNANGLE);
+		findSunDuringWhileLoope(&motor, &leds);
 		
 		/* Move counter clockwise if left LED reads brighter light */
 		if(leds.direction == GOCOUNTERCLOCKWISE)

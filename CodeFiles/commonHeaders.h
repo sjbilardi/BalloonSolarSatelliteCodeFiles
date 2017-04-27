@@ -16,11 +16,12 @@
 #define FULLSTEPMODE 1 // fullStepMode
 #define HALFSTEPMODE 2 // halfStepMode
 #define BYCYCLE		 3 // Move one cycle when during function call
-#define BYDEGREES	 4 // Move number of degrees during function call
+#define BYSTEP		 4 // Move one step at a time
+#define BYDEGREES	 5 // Move number of degrees during function call
 
 #define MOTORDELAY	30 // ms
 
-#define SUNDETECTMULT	2	// sun detection multiplier for max deviation
+#define SUNDETECTMULT	1.3	// sun detection multiplier for max deviation
 
 /* Comment codes */
 #define MOVINGCLOCK         0 // sun detected on right led; moving clockwise
