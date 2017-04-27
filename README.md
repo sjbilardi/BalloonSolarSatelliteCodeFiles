@@ -20,3 +20,11 @@ The project will allow a mock satellite to:
 - "CodeFiles" directory contains "main.c" file which includes the .h files in this directory.
 - Header files exist for each component of satellite and have been updated to use structures, containing specifications for these components.
 - Added support for thermistors with conversion to degrees Celsius.
+
+### 2017-04-27
+
+- Updated code files to final version.
+- New features:
+  + Uses IR sensor to determine if an object is within 90cm of bus.
+  + Rotates 360 degrees at beginning to measure noise level  environment. Sets detection thresholds.
+  + Searches for sun before and entering and during main loop. Resets sun angle when sun is detected. 
