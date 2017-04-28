@@ -123,9 +123,9 @@ void moveMotor(Motor *motor)
 		{
 			for(i=0; i<numbStep; i++)
 			{
-				PORTB &= 0xF0; // Turn off the stepper motor only
-				PORTB |= *(steps + i); // Cause the stepper motor to make a step
-				_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
+				PORTB &= 0xF0; 		// Turn off the stepper motor only
+				PORTB |= *(steps + i); 	// Cause the stepper motor to make a step
+				_delay_ms(MOTORDELAY); 	// Delay the time between the step and shutting off the motor
 				
 				/* Increment sun angle */
 				motor->sunAngle = motor->sunAngle + res;
@@ -133,17 +133,21 @@ void moveMotor(Motor *motor)
 				
 				if(motor->steps > stepNumb - 1)
 				{
-					motor->sunAngle = motor->sunAngle - 360;
 					motor->steps = motor->steps - stepNumb;
+				}
+				
+				if(motor->sunAngle > 360.0 - res)
+				{
+					motor->sunAngle = motor->sunAngle - 360;	
 				}
 			}
 		}
 		
 		else if(motor->movementAmount == BYSTEP)
 		{
-			PORTB &= 0xF0; // Turn off the stepper motor only
-			PORTB |= *(steps + motor->stepSeqIndex); // Cause the stepper motor to make a step
-			_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
+			PORTB &= 0xF0; 					// Turn off the stepper motor only
+			PORTB |= *(steps + motor->stepSeqIndex); 	// Cause the stepper motor to make a step
+			_delay_ms(MOTORDELAY); 				// Delay the time between the step and shutting off the motor
 		}
 
 		else
@@ -157,9 +161,9 @@ void moveMotor(Motor *motor)
 		{
 			for(i=numbStep-1; i>=0; i--)
 			{
-				PORTB &= 0xF0; // Turn off the stepper motor only
-				PORTB |= *(steps + i); // Cause the stepper motor to make a step
-				_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
+				PORTB &= 0xF0; 		// Turn off the stepper motor only
+				PORTB |= *(steps + i); 	// Cause the stepper motor to make a step
+				_delay_ms(MOTORDELAY); 	// Delay the time between the step and shutting off the motor
 				
 				/* Decrement sun angle */
 				motor->sunAngle = motor->sunAngle - res;
@@ -167,17 +171,21 @@ void moveMotor(Motor *motor)
 				
 				if(motor->steps < 0)
 				{
-					motor->sunAngle = motor->sunAngle + 360;
 					motor->steps = motor->steps + stepNumb;
+				}
+				
+				if(motor->sunAngle < 0)
+				{
+					motor->sunAngle = motor->sunAngle + 360;
 				}
 			}
 		}
 
 		else if(motor->movementAmount == BYSTEP)
 		{
-			PORTB &= 0xF0; // Turn off the stepper motor only
-			PORTB |= *(steps + motor->stepSeqIndex); // Cause the stepper motor to make a step
-			_delay_ms(MOTORDELAY); // Delay the time between the step and shutting off the motor
+			PORTB &= 0xF0; 					// Turn off the stepper motor only
+			PORTB |= *(steps + motor->stepSeqIndex); 	// Cause the stepper motor to make a step
+			_delay_ms(MOTORDELAY); 				// Delay the time between the step and shutting off the motor
 		}
 
 		else
