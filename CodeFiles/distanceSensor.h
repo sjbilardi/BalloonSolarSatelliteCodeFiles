@@ -10,9 +10,9 @@ typedef struct {
 DistanceSensor distanceSensor_init(char pin)
 {
 	DistanceSensor distanceSensor = {	0,
-										0.0,	// cm
-										0,
-										pin};
+						0.0,	// cm
+						0,
+						pin};
 	return distanceSensor;
 }
 
