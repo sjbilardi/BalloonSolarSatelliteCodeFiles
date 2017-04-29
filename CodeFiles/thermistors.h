@@ -22,33 +22,37 @@ typedef struct {
 /* Motor Functions */
 Thermistor therm1_init(char pin)
 {
-	Thermistor therm1 = {	1,
-							9.88,		// k-ohm
-							297.5,		// K
-							4296.71,
-							VCC,
-							12.3231,	// k-ohm
-							0,
-							0,
-							0.0,
-							0.0,
-							pin	};
+	Thermistor therm1 = {	
+		1,
+		9.88,		// k-ohm
+		297.5,		// K
+		4296.71,
+		VCC,
+		12.3231,	// k-ohm
+		0,
+		0,
+		0.0,
+		0.0,
+		pin};
+	
 	return therm1;
 }
 
 Thermistor therm2_init(char pin)
 {
-	Thermistor therm2 = {	2,
-							9.83,		// k-ohm
-							297.5,		// K
-							4241.48,
-							VCC,
-							12.2836,	// k-ohm
-							0,
-							0,
-							0.0,
-							0.0,
-							pin	};
+	Thermistor therm2 = {	
+		2,
+		9.83,		// k-ohm
+		297.5,		// K
+		4241.48,
+		VCC,
+		12.2836,	// k-ohm
+		0,
+		0,
+		0.0,
+		0.0,
+		pin};
+	
 	return therm2;
 }
 
@@ -67,7 +71,8 @@ void getTemp(Thermistor *therm)
 	
 	therm->Rt = therm->R*(VCC/therm->Vo - 1); 
 	
-	therm->temp = pow((log(therm->Rt/therm->Ro)/therm->B + 1/therm->To), -1) - 273.15;
+	therm->temp = pow((log(therm->Rt/therm->Ro)/therm->B + 1/therm->To), -1)
+			- 273.15;
 	
 	if(DEBUG == 1)
 	{
