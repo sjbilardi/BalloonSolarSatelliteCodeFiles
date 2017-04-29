@@ -32,26 +32,28 @@ typedef struct {
 /* Motor Functions */
 Motor motor_init1(char pins)
 {
-	Motor motor = {	{0x02, 0x08, 0x04, 0x01},							// waveSteps
-					200,												// steps
-					1.8,												// degree
-					{0x03, 0x0A, 0x0C, 0x05},							// fullSteps
-					200,												// steps
-					1.8,												// degrees
-					{0x03, 0x02, 0x0A, 0x08, 0x0C, 0x04, 0x05, 0x01},	// halfSteps
-					400, 												// steps
-					0.9,												// degrees
-					4, // waveStepsSize
-					4, // fullStepsSize
-					8, // halfStepsSize
-					FULLSTEPMODE, // mode (default = fullStepMode)
-					IDLE, // Idle position
-					BYCYCLE,
-					0.0,
-					0.0,
-					0,
-					0,
-					pins}; // PORTB pins 0-3
+	Motor motor = {	
+		{0x02, 0x08, 0x04, 0x01},	// waveSteps
+		200,				// steps
+		1.8,				// degree
+		{0x03, 0x0A, 0x0C, 0x05},	// fullSteps
+		200,				// steps
+		1.8,				// degrees
+		{0x03, 0x02, 0x0A, 0x08, 0x0C, 0x04, 0x05, 0x01}, // halfSteps
+		400,				// steps
+		0.9,				// degrees
+		4,				// waveStepsSize
+		4,				// fullStepsSize
+		8,				// halfStepsSize
+		FULLSTEPMODE,			// mode (default = fullStepMode)
+		IDLE,				// Idle position
+		BYCYCLE,
+		0.0,
+		0.0,
+		0,
+		0,
+		pins}; 				// PORTB pins 0-3
+	
 	DDRB |= pins; // set register B pins to high; configured as high
 	return motor;
 }
@@ -59,26 +61,28 @@ Motor motor_init1(char pins)
 /* Motor Functions */
 Motor motor_init4(char pins)
 {
-	Motor motor = {	{0x08, 0x02, 0x04, 0x01},							// waveSteps
-					200,												// steps
-					1.8,												// degree
-					{0x0A, 0x06, 0x05, 0x09},							// fullSteps
-					200,												// steps
-					1.8,												// degrees
-					{0x08, 0x0A, 0x02, 0x06, 0x04, 0x05, 0x01, 0x09},	// halfSteps
-					400, 												// steps
-					0.9,												// degrees
-					4, // waveStepsSize
-					4, // fullStepsSize
-					8, // halfStepsSize
-					FULLSTEPMODE, // mode (default = fullStepMode)
-					IDLE, // Idle position
-					BYCYCLE,
-					0.0,
-					0.0,
-					0,
-					0,
-					pins}; // PORTB pins 0-3
+	Motor motor = {	
+		{0x08, 0x02, 0x04, 0x01},	// waveSteps
+		200,				// steps
+		1.8,				// degree
+		{0x0A, 0x06, 0x05, 0x09},	// fullSteps
+		200,				// steps
+		1.8,				// degrees
+		{0x08, 0x0A, 0x02, 0x06, 0x04, 0x05, 0x01, 0x09}, // halfSteps
+		400,				// steps
+		0.9,				// degrees
+		4,				// waveStepsSize
+		4,				// fullStepsSize
+		8,				// halfStepsSize
+		FULLSTEPMODE,			// mode (default = fullStepMode)
+		IDLE,				// Idle position
+		BYCYCLE,
+		0.0,
+		0.0,
+		0,
+		0,
+		pins}; 				// PORTB pins 0-3
+	
 	DDRB |= pins; // set register B pins to high; configured as high
 	return motor;
 }
@@ -123,9 +127,12 @@ void moveMotor(Motor *motor)
 		{
 			for(i=0; i<numbStep; i++)
 			{
-				PORTB &= 0xF0; 		// Turn off the stepper motor only
-				PORTB |= *(steps + i); 	// Cause the stepper motor to make a step
-				_delay_ms(MOTORDELAY); 	// Delay the time between the step and shutting off the motor
+				// Turn off the stepper motor only
+				PORTB &= 0xF0;
+				// Cause the stepper motor to make a step
+				PORTB |= *(steps + i);
+				// Delay the time between the step and shutting off the motor
+				_delay_ms(MOTORDELAY);
 				
 				/* Increment sun angle */
 				motor->sunAngle = motor->sunAngle + res;
@@ -145,9 +152,12 @@ void moveMotor(Motor *motor)
 		
 		else if(motor->movementAmount == BYSTEP)
 		{
-			PORTB &= 0xF0; 					// Turn off the stepper motor only
-			PORTB |= *(steps + motor->stepSeqIndex); 	// Cause the stepper motor to make a step
-			_delay_ms(MOTORDELAY); 				// Delay the time between the step and shutting off the motor
+			// Turn off the stepper motor only
+			PORTB &= 0xF0;
+			// Cause the stepper motor to make a step
+			PORTB |= *(steps + motor->stepSeqIndex);
+			// Delay the time between the step and shutting off the motor
+			_delay_ms(MOTORDELAY);
 		}
 
 		else
@@ -161,9 +171,12 @@ void moveMotor(Motor *motor)
 		{
 			for(i=numbStep-1; i>=0; i--)
 			{
-				PORTB &= 0xF0; 		// Turn off the stepper motor only
-				PORTB |= *(steps + i); 	// Cause the stepper motor to make a step
-				_delay_ms(MOTORDELAY); 	// Delay the time between the step and shutting off the motor
+				// Turn off the stepper motor only
+				PORTB &= 0xF0;
+				// Cause the stepper motor to make a step
+				PORTB |= *(steps + i);
+				// Delay the time between the step and shutting off the motor
+				_delay_ms(MOTORDELAY);
 				
 				/* Decrement sun angle */
 				motor->sunAngle = motor->sunAngle - res;
@@ -183,9 +196,12 @@ void moveMotor(Motor *motor)
 
 		else if(motor->movementAmount == BYSTEP)
 		{
-			PORTB &= 0xF0; 					// Turn off the stepper motor only
-			PORTB |= *(steps + motor->stepSeqIndex); 	// Cause the stepper motor to make a step
-			_delay_ms(MOTORDELAY); 				// Delay the time between the step and shutting off the motor
+			// Turn off the stepper motor only
+			PORTB &= 0xF0;
+			// Cause the stepper motor to make a step
+			PORTB |= *(steps + motor->stepSeqIndex);
+			// Delay the time between the step and shutting off the motor
+			_delay_ms(MOTORDELAY);
 		}
 
 		else
