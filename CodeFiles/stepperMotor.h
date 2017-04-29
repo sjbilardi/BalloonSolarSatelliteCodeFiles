@@ -131,7 +131,7 @@ void moveMotor(Motor *motor)
 				PORTB &= 0xF0;
 				// Cause the stepper motor to make a step
 				PORTB |= *(steps + i);
-				// Delay the time between the step and shutting off the motor
+				// Delay time between step and shutting off motor
 				_delay_ms(MOTORDELAY);
 				
 				/* Increment sun angle */
@@ -156,7 +156,7 @@ void moveMotor(Motor *motor)
 			PORTB &= 0xF0;
 			// Cause the stepper motor to make a step
 			PORTB |= *(steps + motor->stepSeqIndex);
-			// Delay the time between the step and shutting off the motor
+			// Delay time between step and shutting off motor
 			_delay_ms(MOTORDELAY);
 		}
 
@@ -175,7 +175,7 @@ void moveMotor(Motor *motor)
 				PORTB &= 0xF0;
 				// Cause the stepper motor to make a step
 				PORTB |= *(steps + i);
-				// Delay the time between the step and shutting off the motor
+				// Delay time between step and shutting off motor
 				_delay_ms(MOTORDELAY);
 				
 				/* Decrement sun angle */
@@ -200,7 +200,7 @@ void moveMotor(Motor *motor)
 			PORTB &= 0xF0;
 			// Cause the stepper motor to make a step
 			PORTB |= *(steps + motor->stepSeqIndex);
-			// Delay the time between the step and shutting off the motor
+			// Delay time between step and shutting off motor
 			_delay_ms(MOTORDELAY);
 		}
 
