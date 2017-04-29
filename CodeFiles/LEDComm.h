@@ -4,9 +4,9 @@
 typedef struct {
 	uint16_t adcVal[3];
   
-  	char leftLED;
-  	char middleLED;
-  	char rightLED;
+	char leftLED;
+	char middleLED;
+	char rightLED;
 	
 	char direction;
 	
@@ -19,12 +19,13 @@ typedef struct {
 LEDS leds_init(char leftLEDpin, char middleLEDpin, char rightLEDpin)
 {
 	int i;
-	LEDS leds = {	{0, 0, 0},  // default val to zero
+	LEDS leds = {	
+		{0, 0, 0},  // default val to zero
 		0, // left LED index
 		1, // middle LED index
-        2, // right LED index
+		2, // right LED index
 		IDLE,
-        {leftLEDpin, middleLEDpin, rightLEDpin},
+		{leftLEDpin, middleLEDpin, rightLEDpin},
 		{0}};
 
 	return leds;
