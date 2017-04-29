@@ -9,10 +9,12 @@ typedef struct {
 
 DistanceSensor distanceSensor_init(char pin)
 {
-	DistanceSensor distanceSensor = {	0,
-						0.0,	// cm
-						0,
-						pin};
+	DistanceSensor distanceSensor = {	
+		0,
+		0.0,	// cm
+		0,
+		pin};
+	
 	return distanceSensor;
 }
 
@@ -20,7 +22,8 @@ void getDistance(DistanceSensor *distanceSensor)
 {
 	distanceSensor->adcVal = readAnalog(distanceSensor->pin);
 	
-	distanceSensor->distance = 9801.8*pow(((double)distanceSensor->adcVal), -1.127); // use power function to calibrate ADC to distance (cm)
+	distanceSensor->distance = 9801.8*pow(((double)distanceSensor->adcVal), 
+		-1.127); // use power function to calibrate ADC to distance (cm)
 	
 	if(distanceSensor->distance < 90.0)
 	{
