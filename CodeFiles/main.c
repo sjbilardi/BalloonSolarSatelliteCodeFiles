@@ -11,12 +11,12 @@
 #define VPROBEBATTPIN	0	// Voltage Probe Battery
 #define VPROBERESPIN	1	// Voltage Probe Resistor
 
-#define LEDLPIN			2	// Photoresistor Left
-#define LEDMPIN			3	// Photoresistor Middle
-#define LEDRPIN			4	// Photoresistor Right
+#define LEDLPIN		2	// Photoresistor Left
+#define LEDMPIN		3	// Photoresistor Middle
+#define LEDRPIN		4	// Photoresistor Right
 
-#define THERM1PIN		5	// Thermistor 1
-#define THERM2PIN		6	// Thermistor 2
+#define THERM1PIN	5	// Thermistor 1
+#define THERM2PIN	6	// Thermistor 2
 
 #define DISTSENSORPIN	7	// IR Distance Sensor
 
@@ -56,9 +56,11 @@ void calibrateLEDSMotor(Motor *motor, LEDS *leds)
 	{
 		for(i=0; i<4; i++)
 		{
-			for(j=0; j<sizeof(leds->pins)/sizeof(char); j++) // read leds
+			// read leds
+			for(j=0; j<sizeof(leds->pins)/sizeof(char); j++)
 			{
-				leds->offset[motor->steps][j] = readAnalog(leds->pins[j]);
+				leds->offset[motor->steps][j] 
+					= readAnalog(leds->pins[j]);
 			}
 			motor->stepSeqIndex = i;
 			moveMotor(motor);
@@ -87,9 +89,12 @@ void findSun(Motor *motor, LEDS *leds)
 	}
 	
 	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
-	if((leds->adcVal[leds->leftLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->leftLED]) &&
-		(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]) &&
-		(leds->adcVal[leds->rightLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->rightLED]))
+	if((leds->adcVal[leds->leftLED] < 
+	    	SUNDETECTMULT*leds->offset[motor->steps][leds->leftLED]) &&
+		(leds->adcVal[leds->middleLED] < 
+		 	SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]) &&
+		(leds->adcVal[leds->rightLED] < 
+		 	SUNDETECTMULT*leds->offset[motor->steps][leds->rightLED]))
 		{
 			do
 			{
@@ -97,7 +102,8 @@ void findSun(Motor *motor, LEDS *leds)
 				motor->direction = GOCLOCKWISE;
 				getLEDSVal(leds);
 				moveMotor(motor);
-			} while(leds->adcVal[leds->middleLED] < SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]);
+			} while(leds->adcVal[leds->middleLED] < 
+				SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]);
 		}
 	
 	if(reorientationRequired)
@@ -164,7 +170,8 @@ int main()
 		readVoltageCurrent(&voltageProbes);
 		
 		/* Print Battery Voltage and Current */
-		dtostrf(voltageProbes.voltage[voltageProbes.battVProbe], 6, 3, buffer + strlen(buffer));	// battery voltage (V)
+		dtostrf(voltageProbes.voltage[voltageProbes.battVProbe], 
+			6, 3, buffer + strlen(buffer));	// battery voltage (V)
 		sprintf(buffer + strlen(buffer), " ");
 		dtostrf(voltageProbes.current, 5, 3, buffer + strlen(buffer));								// battery current (mA)
 		sprintf(buffer + strlen(buffer), " ");
@@ -182,7 +189,8 @@ int main()
 		{
 			if(PRINTPRVALS)
 			{
-				sprintf(buffer + strlen(buffer), "%d ", leds.adcVal[i]);
+				sprintf(buffer + strlen(buffer), 
+					"%d ", leds.adcVal[i]);
 			}
 		}
 		
