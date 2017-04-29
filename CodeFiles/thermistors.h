@@ -24,11 +24,11 @@ Thermistor therm1_init(char pin)
 {
 	Thermistor therm1 = {	
 		1,
-		9.88,		// k-ohm
-		297.5,		// K
+		9.88,	// k-ohm
+		297.5,	// K
 		4296.71,
 		VCC,
-		12.3231,	// k-ohm
+		12.3231,// k-ohm
 		0,
 		0,
 		0.0,
@@ -42,11 +42,11 @@ Thermistor therm2_init(char pin)
 {
 	Thermistor therm2 = {	
 		2,
-		9.83,		// k-ohm
-		297.5,		// K
+		9.83,	// k-ohm
+		297.5,	// K
 		4241.48,
 		VCC,
-		12.2836,	// k-ohm
+		12.2836,// k-ohm
 		0,
 		0,
 		0.0,
