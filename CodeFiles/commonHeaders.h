@@ -21,7 +21,7 @@
 
 #define MOTORDELAY          30 // ms
 
-#define SUNDETECTMULT	1.3	    // sun detection multiplier for max deviation
+#define SUNDETECTMULT       1.3// sun detection multiplier for max deviation
 
 /* Comment codes */
 #define MOVINGCLOCK         0 // sun detected on right led; moving clockwise
