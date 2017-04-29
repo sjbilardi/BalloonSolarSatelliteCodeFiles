@@ -88,7 +88,10 @@ void findSun(Motor *motor, LEDS *leds)
 		numbSteps = motor->halfStepNumb;
 	}
 	
-	/* Keep Moving Motor Clockwise if the Middle Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation */
+	/* 	
+		Keep Moving Motor Clockwise if the Middle 
+		Photoresistor Does Not Read SUNDETECTMULT Times the Max Deviation 
+	*/
 	if((leds->adcVal[leds->leftLED] < 
 	    	SUNDETECTMULT*leds->offset[motor->steps][leds->leftLED]) &&
 		(leds->adcVal[leds->middleLED] < 
@@ -119,11 +122,11 @@ int main()
 	int i;
 	char buffer[60] = {"\0"};
 
-	uart_init();					// initialize the UART for serial communication with computer
+	uart_init();	// initialize the UART for serial communication with computer
 	
 	/* Motor Setup */
-	Motor motor = motor_init1(0x0F);// initialize motor to pins 0-3 on PORTB
-	motor.mode = FULLSTEPMODE;		// set motor to move using full step pattern
+	Motor motor = motor_init1(0x0F); // initialize motor to pins 0-3 on PORTB
+	motor.mode = FULLSTEPMODE; // set motor to move using full step pattern
 	motor.movementAmount = BYCYCLE;
 	
 	/* ADC Setup */
@@ -154,17 +157,18 @@ int main()
 	
 	while(1)
 	{
-		sprintf(buffer, ""); 	// reset buffer
+		sprintf(buffer, ""); // reset buffer
 		
 		/* Read Temperature Values */
-		getTemp(&therm1); 		// get temp1
-		getTemp(&therm2);		// get temp2
+		getTemp(&therm1); // get temp1
+		getTemp(&therm2); // get temp2
 		
 		/* Print Temperature Values */
-		dtostrf(therm1.temp, 4, 3, buffer + strlen(buffer));	// convert double to string
-		sprintf(buffer + strlen(buffer), " ");
-		dtostrf(therm2.temp, 5, 3, buffer + strlen(buffer));	// convert double to string
-		//sprintf(buffer + strlen(buffer), " ");
+		// convert double to string
+		dtostrf(therm1.temp, 4, 3, buffer + strlen(buffer));
+		sprintf(buffer + strlen(buffer), ",");
+		dtostrf(therm2.temp, 5, 3, buffer + strlen(buffer));
+		sprintf(buffer + strlen(buffer), ",");
 		
 		/* Read Voltage Values */
 		readVoltageCurrent(&voltageProbes);
@@ -172,13 +176,13 @@ int main()
 		/* Print Battery Voltage and Current */
 		dtostrf(voltageProbes.voltage[voltageProbes.battVProbe], 
 			6, 3, buffer + strlen(buffer));	// battery voltage (V)
-		sprintf(buffer + strlen(buffer), " ");
+		sprintf(buffer + strlen(buffer), ",");
 		dtostrf(voltageProbes.current, 5, 3, buffer + strlen(buffer));								// battery current (mA)
-		sprintf(buffer + strlen(buffer), " ");
+		sprintf(buffer + strlen(buffer), ",");
 		
 		/* Print Sun Angle */
 		dtostrf(motor.sunAngle, 2, 1, buffer + strlen(buffer)); // degrees
-		sprintf(buffer + strlen(buffer), " ");
+		sprintf(buffer + strlen(buffer), ",");
 		
 		/* Read Distance */
 		getDistance(&distanceSensor);
@@ -200,22 +204,23 @@ int main()
 		/* Move counter clockwise if left LED reads brighter light */
 		if(leds.direction == GOCOUNTERCLOCKWISE)
 		{
-			motor.direction = GOCOUNTERCLOCKWISE; // move counter clockwise
-			sprintf(buffer + strlen(buffer), "%d ", MOVINGCOUNTERCLOCK); 
+			// move counter clockwise
+			motor.direction = GOCOUNTERCLOCKWISE;
+			sprintf(buffer + strlen(buffer), "%d,", MOVINGCOUNTERCLOCK); 
 		}
 		
 		/* Move clockwise if right LED reads brighter light */
 		else if(leds.direction == GOCLOCKWISE)
 		{
 			motor.direction = GOCLOCKWISE;
-			sprintf(buffer + strlen(buffer), "%d ", MOVINGCLOCK); 
+			sprintf(buffer + strlen(buffer), "%d,", MOVINGCLOCK); 
 		}
 		
 		/* Do nothing and idle position */
 		else
 		{
 			motor.direction = IDLE;
-			sprintf(buffer + strlen(buffer), "%d ", IDLING); 
+			sprintf(buffer + strlen(buffer), "%d,", IDLING); 
 		}
 		
 		if(distanceSensor.proximityWarning)
