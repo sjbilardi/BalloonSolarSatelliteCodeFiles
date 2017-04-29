@@ -106,7 +106,8 @@ void findSun(Motor *motor, LEDS *leds)
 				getLEDSVal(leds);
 				moveMotor(motor);
 			} while(leds->adcVal[leds->middleLED] < 
-				SUNDETECTMULT*leds->offset[motor->steps][leds->middleLED]);
+				SUNDETECTMULT * 
+				leds->offset[motor->steps][leds->middleLED]);
 		}
 	
 	if(reorientationRequired)
@@ -122,7 +123,8 @@ int main()
 	int i;
 	char buffer[60] = {"\0"};
 
-	uart_init();	// initialize the UART for serial communication with computer
+	// initialize the UART for serial communication with computer
+	uart_init();
 	
 	/* Motor Setup */
 	Motor motor = motor_init1(0x0F); // initialize motor to pins 0-3 on PORTB
