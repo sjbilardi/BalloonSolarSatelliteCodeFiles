@@ -8,18 +8,14 @@
 #include "stepperMotor.h"
 
 /* Pin Layout */
-#define VPROBEBATTPIN	0	// Voltage Probe Battery
-#define VPROBERESPIN	1	// Voltage Probe Resistor
-
-#define LEDLPIN		2	// Photoresistor Left
-#define LEDMPIN		3	// Photoresistor Middle
-#define LEDRPIN		4	// Photoresistor Right
-
-#define THERM1PIN	5	// Thermistor 1
-#define THERM2PIN	6	// Thermistor 2
-
-#define DISTSENSORPIN	7	// IR Distance Sensor
-
+#define VPROBEBATTPIN	0 // Voltage Probe Battery
+#define VPROBERESPIN	1 // Voltage Probe Resistor
+#define LEDLPIN		2 // Photoresistor Left
+#define LEDMPIN		3 // Photoresistor Middle
+#define LEDRPIN		4 // Photoresistor Right
+#define THERM1PIN	5 // Thermistor 1
+#define THERM2PIN	6 // Thermistor 2
+#define DISTSENSORPIN	7 // IR Distance Sensor
 #define RESETSUNANGLE	1
 #define KEEPSUNANGLE	0
 
